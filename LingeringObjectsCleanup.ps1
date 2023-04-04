@@ -38,14 +38,14 @@ function CheckAndRemoveLingeringObjects {
     $checkResult = repadmin /removelingeringobjects $Server $PartitionDN /Advisory_Mode
 
     if ($checkResult -match "No lingering objects found") {
-        Write-Host "No lingering objects found in $PartitionDN on server $Server."
+        Write-Host "No lingering objects found in $PartitionDN on server $Server." -ForegroundColor Green
     } else {
         if ($CheckOnly) {
-            Write-Host "Lingering objects detected in $PartitionDN on server $Server. To remove them, run the script without the -CheckOnly switch."
+            Write-Host "Lingering objects detected in $PartitionDN on server $Server. To remove them, run the script without the -CheckOnly switch." -ForegroundColor Yellow
         } else {
-            Write-Host "Removing lingering objects from $PartitionDN on server $Server..."
+            Write-Host "Removing lingering objects from $PartitionDN on server $Server..." -ForegroundColor Cyan
             $removeResult = repadmin /removelingeringobjects $Server $PartitionDN
-            Write-Host "Lingering objects removal result:`n$removeResult"
+            Write-Host "Lingering objects removal result:`n$removeResult" -ForegroundColor Magenta
         }
     }
 }
@@ -63,7 +63,7 @@ foreach ($dc in $allDCs) {
     $configPartition = (Get-ADRootDSE).configurationNamingContext
     $schemaPartition = (Get-ADRootDSE).schemaNamingContext
 
-    Write-Host "`nChecking server $dcName for lingering objects..."
+    Write-Host "`nChecking server $dcName for lingering objects..." -ForegroundColor White -BackgroundColor DarkCyan
 
     CheckAndRemoveLingeringObjects -PartitionDN $domainPartition -Server $dcName -CheckOnly:$CheckOnly
     CheckAndRemoveLingeringObjects -PartitionDN $configPartition -Server $dcName -CheckOnly:$CheckOnly
